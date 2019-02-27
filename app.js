@@ -6,26 +6,6 @@ const logger = require('morgan');
 
 const app = express();
 
-const MongoClient = require('mongodb').MongoClient;
-const dbUri = 'mongodb+srv://kwaihung1314:admin@firstcluster-dpxbb.gcp.mongodb.net/test?retryWrites=true';
-const dbClient = new MongoClient(dbUri, { useNewUrlParser: true });
-
-dbClient.connect((err, client) => {
-  if (err) {
-    console.log(err.message);
-    return;
-  }
-  const db = dbClient.db('chatroom');
-  const collection = db.collection('test');
-  console.log('successful connected to db ' + db.databaseName + ' of mongo');
-  collection.insertOne({a: 'hello'}, (err, result) => {
-    if (err) {
-      console.log(err.message);
-    }
-    console.log(result.ops);
-  });
-});
-
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
