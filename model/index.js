@@ -13,8 +13,4 @@ dbClient.connect()
     console.log(err);
 })
 
-function getDb() {
-    return dbClient;
-}
-
-module.exports = getDb;
+module.exports = dbClient;
