@@ -31,4 +31,6 @@ let userSchema = new Schema({
 
 userSchema.plugin(uniqueValidator, {message: '{PATH} is already used.'});
 
+// methods generate jwt
+
 module.exports = mongoose.model('users', userSchema);

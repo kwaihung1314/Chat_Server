@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
+const config = require('../config');
 
-const dbUri = 'mongodb+srv://kwaihung1314:admin@firstcluster-dpxbb.gcp.mongodb.net/chatroom?retryWrites=true';
+// TODO: change to process.env
+const dbUri = `mongodb+srv://${config.db.username}:${config.db.password}@firstcluster-dpxbb.gcp.mongodb.net/${config.db.name}?retryWrites=true`;
 
 mongoose.connect(dbUri, {useNewUrlParser: true})
     .then(() => {
