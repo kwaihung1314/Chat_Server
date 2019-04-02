@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const uniqueValidator = require('mongoose-unique-validator');
+const jwt = require('jsonwebtoken');
+const config = require('../config');
 
 let userSchema = new Schema({
     username: {
@@ -32,5 +34,13 @@ let userSchema = new Schema({
 userSchema.plugin(uniqueValidator, {message: '{PATH} is already used.'});
 
 // methods generate jwt
+userSchema.methods.generateJWT = function() {
+    return jwt.sign({
+        username: this.username,
+        email: this.email
+    }, config.secret, {
+        expiresIn: 60 * 60 * 1000
+    })
+}
 
 module.exports = mongoose.model('users', userSchema);

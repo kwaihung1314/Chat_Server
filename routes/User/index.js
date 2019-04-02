@@ -1,5 +1,6 @@
 const app = require('express').Router();
 const userModel = require('../../models/User');
+const email = require('../../service/email');
 
 // register API
 app.post('/register', (req, res, next) => {
@@ -14,7 +15,9 @@ app.post('/register', (req, res, next) => {
     });
     newUser.save()
         .then(user => {
+            email.activateAccAndSetPassword(user.username, user.email);
             res.send(user);
+            return;
         })
         .catch(err => {
             next(err);

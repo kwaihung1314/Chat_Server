@@ -6,6 +6,12 @@ module.exports = {
     username: process.env.DB_USER || 'kwaihung1314',
     password: process.env.DB_PASSWORD || 'admin',
     name: process.env.DB_NAME || 'chatroom'
+  },
+
+  // email
+  gmail: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
   }
 }
 
