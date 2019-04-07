@@ -1,5 +1,11 @@
 const nodemailer = require('nodemailer');
 const config = require('../config');
+const fs = require('fs');
+const compiled = require('lodash.template');
+const path = require('path');
+
+let verificationEmailText = compiled(fs.readFileSync(path.resolve(__dirname, './emailTemplates/activateAccAndSetPassword.txt'), {encoding: 'UTF-8'}));
+let verificationEmailHtml = compiled(fs.readFileSync(path.resolve(__dirname, './emailTemplates/activateAccAndSetPassword.html'), {encoding: 'UTF-8'}));
 
 let transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
@@ -11,13 +17,13 @@ let transporter = nodemailer.createTransport({
   }
 });
 
-function activateAccAndSetPassword(username, email) {
+function activateAccAndSetPassword(username, email, url) {
   let messageConfig = {
     from: 'berylchatroom@gmail.com',
     to: `"${username}" <${email}>`,
     subject: 'Hello from beryl chatroom',
-    text: 'Hello it is sent from beryl chatroom',
-    html: '<b>Hello it is sent from beryl chatroom</b>'
+    text: verificationEmailText({username, url}),
+    html: verificationEmailHtml({username, url})
   }
 
   transporter.sendMail(messageConfig, function(err, info) {
