@@ -12,6 +12,10 @@ module.exports = {
   gmail: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
+  },
+
+  validationPattern: {
+    user_password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/
   }
 }
 

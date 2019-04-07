@@ -34,12 +34,12 @@ let userSchema = new Schema({
 userSchema.plugin(uniqueValidator, {message: '{PATH} is already used.'});
 
 // methods generate jwt
-userSchema.methods.generateJWT = function() {
+userSchema.methods.generateVerifyJWT = function() {
     return jwt.sign({
         username: this.username,
         email: this.email
     }, config.secret, {
-        expiresIn: 60 * 60 * 1000
+        expiresIn: '7 days'
     })
 }
 
