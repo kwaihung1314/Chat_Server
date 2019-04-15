@@ -1,8 +1,9 @@
 const jwt = require('jsonwebtoken')
 const fs = require('fs')
 const config = require('../../config')
-const privateKey =  fs.readFileSync('/rsa_private.pem', 'utf8')
-const publicKey = fs.readFileSync('/rsa_public.pem', 'utf8')
+const path = require('path')
+const privateKey =  fs.readFileSync(path.resolve(__dirname, './rsa_private.pem'), 'utf8')
+const publicKey = fs.readFileSync(path.resolve(__dirname, './rsa_public.pem'), 'utf8')
 
 const signHashOptions = {
   expiresIn: '2 days'

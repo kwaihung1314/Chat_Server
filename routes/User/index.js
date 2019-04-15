@@ -57,21 +57,26 @@ app.post('/activate-setpassword', (req, res, next) => {
   .then(hash => {
     userModel.update({
       username: user.username,
-      email: user.email
+      email: user.email,
+      active: false
     }, {
       password: hash,
       active: true
     }, (err, result) => {
       if (err) {
-        next(err);
+        return next(err);
       }
-      res.sendStatus(200);
+      if (result.nModified === 0) {
+        res.status(401).send('Account was activated before')
+      } else {
+        res.sendStatus(200);
+      }
       console.log('updated: ', result.nModified);
     })
   })
   .catch((err) => {
     if (err.name == 'TokenError') {
-      res.status(401).send('Invalid or expired link.')
+      res.status(401).send('Invalid or expired link')
       return;
     }
     next(err);
