@@ -88,18 +88,34 @@ app.get('/checkCode', (req, res, next) => {
     res.send(400);
     return;
   }
-  token.verifyHashToken(req.query.code)
-  .then(decode => {
-    res.send(decode);
-    return;
-  })
-  .catch(err => {
-    if (err.name == 'TokenError') {
-      res.status(401).send('Invalid or expired link.')
+  if (req.query.type === 'hash') {
+    token.verifyHashToken(req.query.code)
+    .then(decode => {
+      res.send(decode);
       return;
-    }
-    next(err);
-  })
+    })
+    .catch(err => {
+      if (err.name == 'TokenError') {
+        res.status(401).send('Invalid or expired link.')
+        return;
+      }
+      next(err);
+    })
+  }
+  if (req.query.type === 'key') {
+    token.verifyKeyToken(req.query.code)
+    .then(decode => {
+      res.send(decode);
+      return;
+    })
+    .catch(err => {
+      if (err.name == 'TokenError') {
+        res.status(401).send('Invalid or expired link.')
+        return;
+      }
+      next(err);
+    })
+  }
 });
 
 // authenticate user

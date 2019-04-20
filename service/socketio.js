@@ -1,24 +1,39 @@
+const verifyKeyToken = require('./token').verifyKeyToken
+
 module.exports = (io) => {
     let onlineUsers = {};
 
+    io.use((socket, next) => {
+        let token = socket.handshake.query.token
+        verifyKeyToken(token)
+        .then((user) => {
+            socket.username = user.username
+            next()
+        })
+        .catch(err => {
+            next(err)
+        })
+    })
+
     io.on('connection', (socket) => {
-        console.log('connected: ', socket.id);
-        io.to(socket.id).emit('online user', onlineUsers);
+        socket.join(socket.username)
+        console.log('connected: ', socket.username);
+        io.to(socket.username).emit('online user', onlineUsers);
         socket.on('user entered', (data) => {
             console.log(data);
-            onlineUsers[socket.id] = data;
+            onlineUsers[socket.username] = data;
             io.emit('update users', {
                 name: data,
-                id: socket.id
+                // id: socket.id
             }, `${data} have entered`, 'enter');
         });
         socket.on('disconnect', () => {
-            console.log('closed: ', socket.id);
-            let userLeft = onlineUsers[socket.id];
-            delete onlineUsers[socket.id];
+            console.log('closed: ', socket.username);
+            let userLeft = onlineUsers[socket.username];
+            delete onlineUsers[socket.username];
             io.emit('update users', {
                 name: userLeft,
-                id: socket.id
+                // id: socket.id
             }, `${userLeft} has left`, 'left');
             console.log(onlineUsers);
         });
@@ -35,13 +50,13 @@ module.exports = (io) => {
         })
         socket.on('private message', (data) => {
             console.log('private')
-            io.to(data.toId).emit('new private message', data)
-            io.to(data.fromId).emit('my private message', data)
+            io.to(data.toName).emit('new private message', data)
+            io.to(data.fromName).emit('my private message', data)
         })
         socket.on('private image', (data, file) => {
             console.log('private')
-            io.to(data.toId).emit('new private image', data, file)
-            io.to(data.fromId).emit('my private image', data, file)
+            io.to(data.toName).emit('new private image', data, file)
+            io.to(data.fromName).emit('my private image', data, file)
         })
     });
 }
